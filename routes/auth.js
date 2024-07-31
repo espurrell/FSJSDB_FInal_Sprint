@@ -18,7 +18,7 @@ const pool = new Pool({
 
 // MongoDB connection setup
 const url = 'mongodb://localhost:27017';
-const MongoClient = new MongoClient(mongoUri, { useUnifiedTopology: true });
+const MongoClient = new MongoClient(mongoUri, { useNewUrlParser: true, useUnifiedTopology: true });
 
 //MongoDB database and collection
 
