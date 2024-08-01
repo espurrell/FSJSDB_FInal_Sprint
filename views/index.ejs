@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>DMV Search Engine</title>
+		<link rel="stylesheet" href="/style.css" />
+	</head>
+
+    <body>
+        <h1>Welcome to DMV Search Engine</h1>
+<% if (user) { %>
+    <p>Logged in as <%= user.username %></p>
+    <a href="/auth/logout">Logout</a>
+    <a href="/search">Search</a>
+<% } else { %>
+    <a href="/auth/login">Login</a>
+    <a href="/auth/register">Register</a>
+<% } %>
+</html>
