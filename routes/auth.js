@@ -6,8 +6,7 @@ const { Pool } = require('pg');
 const { MongoClient } = require('mongodb');
 const router = express.Router();
 
-// Postgres connection setup
-
+// PostgreSQL connection setup
 const pool = new Pool({
     user: 'postgres',
     host: 'localhost',
@@ -18,15 +17,13 @@ const pool = new Pool({
 
 // MongoDB connection setup
 const url = 'mongodb://localhost:27017';
-const MongoClient = new MongoClient(mongoUri, { useNewUrlParser: true, useUnifiedTopology: true });
-
-//MongoDB database and collection
+const client = new MongoClient(url, { useNewUrlParser: true, useUnifiedTopology: true });
 
 let mongoDb, usersCollection;
 
 async function connectToMongo() {
-    await MongoClient.connect();
-    mongoDb = MongoClient.db('dmv'); 
+    await client.connect();
+    mongoDb = client.db('dmv'); 
     usersCollection = mongoDb.collection('user_profiles'); 
 }
 
@@ -61,13 +58,16 @@ passport.deserializeUser(async (id, done) => {
     }
 });
 
+//render login page
 router.get('/login', (req, res) => {
     res.render('login');
 });
 
+//handle login
 router.post('/login', passport.authenticate('local', {
     successRedirect: '/search',
-    failureRedirect: '/login'
+    failureRedirect: '/login',
+    failureFlash: true
 }));
 
 router.get('/signup', (req, res) => {
@@ -99,6 +99,7 @@ router.post('/signup', async (req, res) => {
     }
 });
 
+//handle logout
 router.get('/logout', (req, res) => {
     req.logout();
     res.redirect('/login');

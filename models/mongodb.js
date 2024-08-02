@@ -6,7 +6,7 @@ const url = 'mongodb://localhost:27017';
 const dbName = 'DMV';
 
 // Create a new MongoClient
-const client = new MongoClient(url, { useNewUrlParser: true, useUnifiedTopology: true });
+const client = new MongoClient(url);
 
 let db;
 
