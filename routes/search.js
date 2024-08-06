@@ -5,6 +5,11 @@ const router = express.Router();
 const postgres = require('../models/postgres');
 const mongodb = require('../models/mongodb');
 
+// get route to display page
+router.get('/', (req, res) => {
+    res.render('search');
+});
+
 router.post('/', async (req, res) => {
     const { query, source } = req.body;
     let results = [];

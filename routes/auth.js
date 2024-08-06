@@ -78,31 +78,22 @@ router.get('/signup', (req, res) => {
 router.post('/signup', async (req, res) => {
     const { username, password } = req.body;
     try {
-        const userCheck = await pool.query('SELECT * FROM users WHERE username = $1', [username]);
-        if (userCheck.rows.length > 0) {
-            return res.status(400).send('User already exists');
-    }
-        // Hash password
+        // hash the password
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        // Insert user into PostgreSQL
-        const pgResult = await pool.query('INSERT INTO users (username, password) VALUES ($1, $2) RETURNING id', [username, hashedPassword]);
-        const userId = pgResult.rows[0].id;
-
-        // Insert user profile into MongoDB
-        const userProfile = {
-            userId,  // Reference to PostgreSQL user ID
-            username,
-            profileData: {}  // Additional profile data
-        };
-        await usersCollection.insertOne(userProfile);
+        // insert user into PostgreSQL
+        const pgReslts = await pool.query('INSERT INTO users (username, password) VALUES ($1, $2) RETURNING *', [username, hashedPassword]);
 
         res.redirect('/login');
-    } catch (err) {
-        console.error('Error during signup:', err);
-        res.redirect('/signup');
-    }
-});
+        } catch (err) {
+            if (err.code === '23505') {
+                res.send('User already exists');
+            } else {
+                console.error('Error during signup:', err);
+                res.redirect('/signup');
+  1          }
+        }
+    });
 
 //handle logout
 router.get('/logout', (req, res) => {

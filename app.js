@@ -2,7 +2,6 @@ const express = require('express');
 const { Pool } = require('pg');
 const { MongoClient } = require('mongodb');
 const path = require('path');
-const bodyParser = require('body-parser');
 const session = require('express-session');
 const passport = require('passport');
 const searchRoutes = require('./routes/search');
@@ -11,14 +10,12 @@ const indexRoutes = require('./routes/index');
 
 const app = express();
 
-// Set view engine to EJS
-app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'views'));
 
 // Middleware setup
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.urlencoded({ extended: true }));
 
 // Session and Passport setup
 app.use(session({
