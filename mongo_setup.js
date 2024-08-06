@@ -15,6 +15,7 @@ async function main() {
         await db.createCollection('drivers');
         await db.createCollection('vehicles');
         await db.createCollection('registrations');
+        await db.createCollection('users');
 
         console.log('Collections created successfully');
     } finally {

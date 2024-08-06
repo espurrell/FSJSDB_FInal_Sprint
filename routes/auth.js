@@ -78,9 +78,13 @@ router.get('/signup', (req, res) => {
 router.post('/signup', async (req, res) => {
     const { username, password } = req.body;
     try {
+        const userCheck = await pool.query('SELECT * FROM users WHERE username = $1', [username]);
+        if (userCheck.rows.length > 0) {
+            return res.status(400).send('User already exists');
+    }
         // Hash password
         const hashedPassword = await bcrypt.hash(password, 10);
-        
+
         // Insert user into PostgreSQL
         const pgResult = await pool.query('INSERT INTO users (username, password) VALUES ($1, $2) RETURNING id', [username, hashedPassword]);
         const userId = pgResult.rows[0].id;
