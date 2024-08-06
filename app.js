@@ -20,6 +20,26 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Session and Passport setup
+app.use(session({
+    secret: 'your_secret_key',
+    resave: false,
+    saveUninitialized: true
+}));
+app.use(passport.initialize());
+app.use(passport.session());
+
+// Routes
+app.use('/search', searchRoutes);
+app.use('/auth', authRoutes);
+app.use('/', indexRoutes);
+
+
+// handle 404 errors
+app.use((req,res) => {
+    res.status(404).send('Not found');
+});
+
 // Connect to MongoDB
 MongoClient.connect('mongodb://localhost:27017')
     .then(client => {
@@ -39,20 +59,6 @@ const postgresPool = new Pool({
 });
 
 app.locals.postgresPool = postgresPool;
-
-// Session and Passport setup
-app.use(session({
-    secret: 'your_secret_key',
-    resave: false,
-    saveUninitialized: true
-}));
-app.use(passport.initialize());
-app.use(passport.session());
-
-// Routes
-app.use('/search', searchRoutes);
-app.use('/auth', authRoutes);
-app.use('/', indexRoutes);
 
 // Start your server
 const port = process.env.PORT || 3000;
