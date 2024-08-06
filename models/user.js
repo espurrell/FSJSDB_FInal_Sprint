@@ -1,20 +1,26 @@
 // models/user.js
-const mongoose = require('mongoose');
-const bcrypt = require('bcryptjs');
+const { Pool } = require('pg');
+const { MongoClient } = require('mongodb');
 
-const userSchema = new mongoose.Schema({
-    username: String,
-    password: String
+// PostgreSQL connection
+const pool = new Pool({
+    user: 'postgres',
+    host: 'localhost',
+    database: 'DMV',
+    password: 'Keyin2021',
+    port: 5432,
 });
 
-userSchema.pre('save', function(next) {
-    if (!this.isModified('password')) return next();
-    this.password = bcrypt.hashSync(this.password, 10);
-    next();
-});
+// MongoDB connection
+const url = 'mongodb://localhost:27017';
+const client = new MongoClient(url, { useNewUrlParser: true, useUnifiedTopology: true });
 
-userSchema.methods.validPassword = function(password) {
-    return bcrypt.compareSync(password, this.password);
+async function connectToMongo() {
+    await client.connect();
+    return client.db('dmv').collection('user_profiles');
+}
+
+module.exports = {
+    pool,
+    connectToMongo
 };
-
-module.exports = mongoose.model('User', userSchema);

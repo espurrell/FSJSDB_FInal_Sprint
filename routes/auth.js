@@ -5,6 +5,7 @@ const bcrypt = require('bcryptjs');
 const { Pool } = require('pg');
 const { MongoClient } = require('mongodb');
 const router = express.Router();
+const User = require('../models/user');
 
 // PostgreSQL connection setup
 const pool = new Pool({
