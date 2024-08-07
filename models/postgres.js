@@ -10,18 +10,35 @@ const pool = new Pool({
   port: 5432, // Default port for PostgreSQL
 });
 
-// Function to query the database
-// const query = (text, params) => pool.query(text, params);
-
-async function search(query) {
+async function search({ vin_number, licence_number, registration_id }) {
+  const client = await pool.connect();
   try {
-    const result = await pool.query('SELECT * FROM users WHERE username = $1', [query]);
+    let query = 'SELECT * FROM Vehicle WHERE 1=1'; // Adjust the table name accordingly
+    const values = [];
+
+    if (vin_number) {
+      query += ` AND vin_number = $${values.length + 1}`;
+      values.push(vin_number);
+    }
+    if (licence_number) {
+      query += ` AND licence_number = $${values.length + 1}`;
+      values.push(licence_number);
+    }
+    if (registration_id) {
+      query += ` AND registration_id = $${values.length + 1}`;
+      values.push(registration_id);
+    }
+
+    const result = await client.query(query, values);
     return result.rows;
   } catch (err) {
     console.error('Error executing query', err);
     throw err;
+  } finally {
+    client.release();
+  }
 }
-}
+
 module.exports = {
   search
 };

@@ -5,25 +5,25 @@ const router = express.Router();
 const postgres = require('../models/postgres');
 const mongodb = require('../models/mongodb');
 
-// get route to display page
+// get route to display search page
 router.get('/', (req, res) => {
     res.render('search');
 });
 
 router.post('/', async (req, res) => {
-    const { query, source } = req.body;
+    const { vin_number, licence_number, registration_id, source } = req.body;
     let results = [];
 
     try {
         if (source === 'postgres' || source === 'both') {
             // Perform search in PostgreSQL
-            const pgResults = await postgres.search(query);
+            const pgResults = await postgres.search({ vin_number, licence_number, registration_id });
             results = results.concat(pgResults);
         }
 
         if (source === 'mongo' || source === 'both') {
             // Perform search in MongoDB
-            const mongoResults = await mongodb.search(query);
+            const mongoResults = await mongodb.search({ vin_number, licence_number, registration_id });
             results = results.concat(mongoResults);
         }
 
