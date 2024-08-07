@@ -1,7 +1,11 @@
 <h1>Search Results</h1>
+<% if (results.length > 0) { %>
 <ul>
 	<% results.forEach(result => { %>
 	<li><%= JSON.stringify(result) %></li>
 	<% }) %>
 </ul>
+<% } else { %>
+    <p>No results found.</p>
+<% } %>
 <a href="/search">Back to Search</a>
