@@ -16,27 +16,33 @@ const connect = async () => {
     await client.connect();
     console.log('Connected to MongoDB');
     db = client.db(dbName);
+    return db;
   } catch (error) {
     console.error('Failed to connect to MongoDB', error);
+    throw error;
   }
 };
 
 // Function to get the database instance
 const getDb = () => db;
 
-async function search(quary) {
+// Function to search the database
+async function search(query, collectionName) {
   try {
-    const db = client.db('dmv');
-    const collection = db.collection('users');
-    //  *******************************^^^^^ (user_profiles)
-    const result = await collection.find({ your_field: {$regex: query, $options: 'i'} }).toArray();
+    if (!db) {
+      await connect(); // Ensure the connection is established
+    }
+    const collection = db.collection(collectionName);
+    const result = await collection.find(query).toArray();
     return result;
   } catch (err) {
     console.error('Error executing query', err);
     throw err;
+  }
 }
-}
+
 module.exports = {
   connect,
   getDb,
+  search
 };

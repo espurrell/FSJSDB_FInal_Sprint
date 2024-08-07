@@ -13,19 +13,26 @@ const pool = new Pool({
 async function search({ vin_number, licence_number, registration_id }) {
   const client = await pool.connect();
   try {
-    let query = 'SELECT * FROM Vehicle WHERE 1=1'; // Adjust the table name accordingly
+    let query = 'SELECT * FROM Vehicle v';
     const values = [];
+    
+    if (vin_number || licence_number) {
+      query += ' LEFT JOIN Registration r ON v.vin_number = r.vin_number';
+      query += ' LEFT JOIN Driver d ON r.driver_id = d.driver_id WHERE 1=1';
+    }
 
     if (vin_number) {
-      query += ` AND vin_number = $${values.length + 1}`;
+      query += ` AND v.vin_number = $${values.length + 1}`;
       values.push(vin_number);
     }
+
     if (licence_number) {
-      query += ` AND licence_number = $${values.length + 1}`;
+      query += ` AND d.licence_number = $${values.length + 1}`;
       values.push(licence_number);
     }
+
     if (registration_id) {
-      query += ` AND registration_id = $${values.length + 1}`;
+      query += ` AND r.registration_id = $${values.length + 1}`;
       values.push(registration_id);
     }
 

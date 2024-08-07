@@ -1,11 +1,9 @@
-// routes/search.js
-
 const express = require('express');
 const router = express.Router();
 const postgres = require('../models/postgres');
 const mongodb = require('../models/mongodb');
 
-// get route to display search page
+// Get route to display search page
 router.get('/', (req, res) => {
     res.render('search');
 });
@@ -22,8 +20,21 @@ router.post('/', async (req, res) => {
         }
 
         if (source === 'mongo' || source === 'both') {
+            // Construct a dynamic MongoDB query
+            await mongodb.connect();
+            let mongoQuery = {};
+            if (vin_number) {
+                mongoQuery.vin_number = vin_number;
+            }
+            if (licence_number) {
+                mongoQuery.licence_number = licence_number;
+            }
+            if (registration_id) {
+                mongoQuery.registration_id = registration_id;
+            }
+
             // Perform search in MongoDB
-            const mongoResults = await mongodb.search({ vin_number, licence_number, registration_id });
+            const mongoResults = await mongodb.search(mongoQuery, 'vehicles'); // assuming 'vehicles' collection
             results = results.concat(mongoResults);
         }
 
