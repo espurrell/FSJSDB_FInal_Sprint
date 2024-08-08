@@ -23,25 +23,32 @@ router.post('/', async (req, res) => {
         if (source === 'mongo' || source === 'both') {
             // Construct a dynamic MongoDB query
             await mongodb.connect();
-            
+
             if (vin_number) {
-                const vinResults = await mongodb.search({ vin_number }, 'Vehicle'); // Assuming 'vehicles' collection
+                console.log('Searching for VIN:', vin_number);
+                const vinResults = await mongodb.search({ vin_number }, 'Vehicle'); // Corrected collection name
+                console.log('MongoDB VIN Results:', vinResults);
                 mongoResults = mongoResults.concat(vinResults);
             }
 
             if (licence_number) {
-                const licenceResults = await mongodb.search({ licence_number }, 'Driver'); // Assuming 'drivers' collection
+                console.log('Searching for Licence Number:', licence_number);
+                const licenceResults = await mongodb.search({ licence_number }, 'Driver'); // Corrected collection name
+                console.log('MongoDB Licence Number Results:', licenceResults);
                 mongoResults = mongoResults.concat(licenceResults);
             }
 
             if (registration_id) {
-                const registrationResults = await mongodb.search({ registration_id }, 'Registration'); // Assuming 'registrations' collection
+                console.log('Searching for Registration ID:', registration_id);
+                const registrationResults = await mongodb.search({ registration_id }, 'Registration'); // Corrected collection name
+                console.log('MongoDB Registration ID Results:', registrationResults);
                 mongoResults = mongoResults.concat(registrationResults);
             }
 
             results = results.concat(mongoResults);
         }
 
+        console.log('Final Search Results:', results);
         res.render('results', { results });
     } catch (error) {
         console.error('Search Error:', error);
