@@ -25,17 +25,17 @@ router.post('/', async (req, res) => {
             await mongodb.connect();
             
             if (vin_number) {
-                const vinResults = await mongodb.search({ vin_number }, 'vehicles'); // Assuming 'vehicles' collection
+                const vinResults = await mongodb.search({ vin_number }, 'Vehicle'); // Assuming 'vehicles' collection
                 mongoResults = mongoResults.concat(vinResults);
             }
 
             if (licence_number) {
-                const licenceResults = await mongodb.search({ licence_number }, 'drivers'); // Assuming 'drivers' collection
+                const licenceResults = await mongodb.search({ licence_number }, 'Driver'); // Assuming 'drivers' collection
                 mongoResults = mongoResults.concat(licenceResults);
             }
 
             if (registration_id) {
-                const registrationResults = await mongodb.search({ registration_id }, 'registrations'); // Assuming 'registrations' collection
+                const registrationResults = await mongodb.search({ registration_id }, 'Registration'); // Assuming 'registrations' collection
                 mongoResults = mongoResults.concat(registrationResults);
             }
 
