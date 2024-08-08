@@ -16,7 +16,7 @@ async function search({ vin_number, licence_number, registration_id }) {
     let query = 'SELECT * FROM Vehicle v';
     const values = [];
     
-    if (vin_number || licence_number) {
+    if (vin_number || licence_number || registration_id) {
       query += ' LEFT JOIN Registration r ON v.vin_number = r.vin_number';
       query += ' LEFT JOIN Driver d ON r.driver_id = d.driver_id WHERE 1=1';
     }
