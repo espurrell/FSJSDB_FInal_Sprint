@@ -23,24 +23,25 @@ router.post('/', async (req, res) => {
         if (source === 'mongo' || source === 'both') {
             // Construct a dynamic MongoDB query
             await mongodb.connect();
+            console.log('Connected to MongoDB.');
 
             if (vin_number) {
                 console.log('Searching for VIN:', vin_number);
-                const vinResults = await mongodb.search({ vin_number }, 'Vehicle'); // Corrected collection name
+                const vinResults = await mongodb.search({ vin_number }, 'Vehicle');
                 console.log('MongoDB VIN Results:', vinResults);
                 mongoResults = mongoResults.concat(vinResults);
             }
 
             if (licence_number) {
                 console.log('Searching for Licence Number:', licence_number);
-                const licenceResults = await mongodb.search({ licence_number }, 'Driver'); // Corrected collection name
+                const licenceResults = await mongodb.search({ licence_number }, 'Driver');
                 console.log('MongoDB Licence Number Results:', licenceResults);
                 mongoResults = mongoResults.concat(licenceResults);
             }
 
             if (registration_id) {
                 console.log('Searching for Registration ID:', registration_id);
-                const registrationResults = await mongodb.search({ registration_id }, 'Registration'); // Corrected collection name
+                const registrationResults = await mongodb.search({ registration_id }, 'Registration');
                 console.log('MongoDB Registration ID Results:', registrationResults);
                 mongoResults = mongoResults.concat(registrationResults);
             }

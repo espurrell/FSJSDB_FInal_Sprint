@@ -2,7 +2,7 @@
 const { MongoClient } = require('mongodb');
 
 // MongoDB connection URL and database name
-const url = 'mongodb://localhost:27017';
+const url = 'mongodb://localhost:27017/DMV';
 const dbName = 'DMV';
 
 // Create a new MongoClient
