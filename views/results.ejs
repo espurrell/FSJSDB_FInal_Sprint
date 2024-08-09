@@ -1,20 +1,94 @@
 <!DOCTYPE html>
-<head><link rel="stylesheet" href="/style.css" /></head>
-<header>
-    <img src="/images/DMV4.png" alt="DMV Logo" width="760" height="148">
-</header>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Results</title>
+    <link rel="stylesheet" href="/style.css" />
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 1em;
+            text-align: left;
+            word-wrap: break-word; /* Force long words to wrap */
+        }
+        th, td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            max-width: 200px; /* Limit the width of each cell */
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        .table-container {
+            overflow-x: auto; /* Make table scrollable horizontally within its container */
+        }
+    </style>
+</head>
 <body>
-<h1>Search Results</h1>
-<% if (results.length > 0) { %>
-<ul>
-	<% results.forEach(result => { %>
-	<li><%= JSON.stringify(result) %></li>
-	<% }) %>
-</ul>
-<% } else { %>
-    <p>No results found.</p>
-<% } %>
+    <header>
+        <img src="/images/DMV4.png" alt="DMV Logo" width="760" height="148">
+    </header>
+
+    <h1>Search Results</h1>
+
+    <% if (results.length > 0) { %>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>VIN Number</th>
+                        <th>Make</th>
+                        <th>Model</th>
+                        <th>Year</th>
+                        <th>Color</th>
+                        <th>Registration ID</th>
+                        <th>Driver ID</th>
+                        <th>Registration Date</th>
+                        <th>Expiry Date</th>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Address</th>
+                        <th>Phone Number</th>
+                        <th>Email</th>
+                        <th>Licence Number</th>
+                        <th>Birthdate</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% results.forEach(result => { %>
+                    <tr>
+                        <td><%= result.vin_number %></td>
+                        <td><%= result.make %></td>
+                        <td><%= result.model %></td>
+                        <td><%= result.year %></td>
+                        <td><%= result.color %></td>
+                        <td><%= result.registration_id %></td>
+                        <td><%= result.driver_id %></td>
+                        <td><%= new Date(result.registration_date).toLocaleDateString() %></td>
+                        <td><%= new Date(result.expiry_date).toLocaleDateString() %></td>
+                        <td><%= result.first_name %></td>
+                        <td><%= result.last_name %></td>
+                        <td><%= result.address %></td>
+                        <td><%= result.phone_number %></td>
+                        <td><%= result.email %></td>
+                        <td><%= result.licence_number %></td>
+                        <td><%= new Date(result.birthdate).toLocaleDateString() %></td>
+                    </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+        </div>
+    <% } else { %>
+        <p>No results found.</p>
+    <% } %>
+
+    <br/>
+    <a href="/search">Back to Search</a>
 </body>
-
-<a href="/search">Back to Search</a>
-
+</html>
