@@ -95,10 +95,14 @@ router.post('/signup', async (req, res) => {
         }
     });
 
-//handle logout
-router.get('/logout', (req, res) => {
-    req.logout();
-    res.redirect('/login');
+// Handle logout
+router.get('/logout', (req, res, next) => {
+    req.logout((err) => {
+        if (err) {
+            return next(err);
+        }
+        res.redirect('/');
+    });
 });
 
 module.exports = router;
