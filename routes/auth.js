@@ -77,6 +77,7 @@ router.get('/signup', (req, res) => {
 
 router.post('/signup', async (req, res) => {
     const { username, password } = req.body;
+    console.log('Signup request received:', username); 
     try {
         // hash the password
         const hashedPassword = await bcrypt.hash(password, 10);
@@ -84,7 +85,7 @@ router.post('/signup', async (req, res) => {
         // insert user into PostgreSQL
         const pgReslts = await pool.query('INSERT INTO users (username, password) VALUES ($1, $2) RETURNING *', [username, hashedPassword]);
 
-        res.redirect('/login');
+        res.redirect('/auth/login');
         } catch (err) {
             if (err.code === '23505') {
                 res.send('User already exists');
